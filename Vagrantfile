@@ -13,6 +13,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   config.vm.provision "ansible" do |ansible|
     ansible.playbook = "provisioning/oracle-xe.yml"
-    ansible.verbose = "extra"
   end
+
+  config.vm.network "forwarded_port", guest: 8080, host: 8080, auto_correct: true
+  config.vm.network "forwarded_port", guest: 1521, host: 1521, auto_correct: true
 end

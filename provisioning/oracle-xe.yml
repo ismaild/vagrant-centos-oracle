@@ -18,3 +18,8 @@
       ignore_errors: True
     - name: setup oracle environment
       shell: /bin/echo 'source /u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh' >> /home/vagrant/.bash_profile
+    - name: stop ip tables
+      shell: service iptables stop
+    - name: set oracle listener
+      shell: ORACLE_HOME=/u01/app/oracle/product/11.2.0/xe /u01/app/oracle/product/11.2.0/xe/bin/sqlplus
+        system/manager@localhost < /vagrant/oracle/set_listener.sql
