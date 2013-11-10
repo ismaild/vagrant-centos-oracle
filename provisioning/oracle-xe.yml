@@ -1,0 +1,20 @@
+---
+- hosts: all
+  sudo: yes
+  tasks:
+    - name: ensure packages required are installed
+      yum: pkg=$item state=latest
+      with_items:
+        - libaio
+        - bc
+        - flex
+        - unzip
+    - name: unzip oracle rpm
+      command: /usr/bin/unzip -q /vagrant/oracle/oracle*.rpm.zip -d /vagrant/oracle creates=/vagrant/oracle/Disk1
+    - name: install oracle
+      shell: /bin/rpm -ivh /vagrant/oracle/Disk1/oracle-xe-11.2.0-1.0.x86_64.rpm creates=/u01
+    - name: configure oracle
+      shell: /etc/init.d/oracle-xe configure responseFile=/vagrant/oracle/xe.rsp
+      ignore_errors: True
+    - name: setup oracle environment
+      shell: /bin/echo 'source /u01/app/oracle/product/11.2.0/xe/bin/oracle_env.sh' >> /home/vagrant/.bash_profile

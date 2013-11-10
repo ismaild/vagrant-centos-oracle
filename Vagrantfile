@@ -10,4 +10,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
+
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "provisioning/oracle-xe.yml"
+    ansible.verbose = "extra"
+  end
 end
