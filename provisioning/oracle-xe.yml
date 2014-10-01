@@ -3,7 +3,7 @@
   sudo: yes
   tasks:
     - name: ensure packages required are installed
-      yum: pkg=$item state=latest
+      yum: pkg={{item}} state=latest
       with_items:
         - libaio
         - bc
