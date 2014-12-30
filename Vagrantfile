@@ -12,8 +12,18 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
-  config.vm.provision "ansible" do |ansible|
-    ansible.playbook = "provisioning/oracle-xe.yml"
+  # ansible is not supported on windows, so we bootstrap it in VM and run the playbooks
+  require 'rbconfig'
+  is_windows = (RbConfig::CONFIG['host_os'] =~ /mswin|mingw|cygwin/)
+  if is_windows
+    config.vm.provision "shell" do |sh|
+      sh.path = "provisioning/windows.sh"
+      sh.args = "provisioning/oracle-xe.yml provisioning/inventory"
+    end
+  else
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "provisioning/oracle-xe.yml"
+    end
   end
 
   config.vm.network "forwarded_port", guest: 8080, host: 8080, auto_correct: true
